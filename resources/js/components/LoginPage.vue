@@ -29,8 +29,9 @@
 </template>
 
 <script>
-
+    import auth from '../mixins/auth';
     export default {
+        mixins: [auth],
         data() {
             return {
                 fields: {},
@@ -41,6 +42,7 @@
         },
         methods: {
             submit() {
+
                 if (this.loaded) {
                     this.loaded = false;
                     this.success = false;
@@ -61,6 +63,7 @@
                 }
             },
         },
+
 
     }
 </script>

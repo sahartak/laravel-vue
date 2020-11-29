@@ -19,11 +19,23 @@
                                     <span v-if="props.days || props.hours || props.minutes || props.seconds">{{ props.seconds }} seconds</span>
                                     <span v-else>Bid expired</span>
                                 </i>
-                                <p class="mt-4 text-center" v-if="props.days || props.hours || props.minutes || props.second">
-                                    <button type="button" class="btn btn-outline-secondary" @click="placeBid">
-                                        Place bid ${{item.price + 1}}
-                                    </button>
-                                </p>
+                                <div v-if="!bidClosed" class="form-check mt-4 text-center">
+                                    <p v-if="balanceAvailable">
+                                        <button type="button" class="btn btn-outline-secondary" @click="placeBid" @disabled="disableBidButton">
+                                            Place bid
+                                        </button>
+                                    </p>
+                                    <div class="alert alert-danger" role="alert" v-else>
+                                        Your max bidding setting does not allow you place new bid!
+                                    </div>
+                                    <p>
+                                        <input class="form-check-input" type="checkbox" value="1" id="auto_bid" v-model="autoBidding">
+                                        <label class="form-check-label" for="auto_bid">
+                                            Enable Auto-bidding
+                                        </label>
+                                    </p>
+
+                                </div>
                                 <div class="alert alert-success" role="alert" v-if="bidPlaced" id="bid_message">
                                     $ {{bidPlaced}} bid was placed
                                 </div>
@@ -55,41 +67,62 @@
     export default {
         mixins: [auth],
         props: {
-            id: Number
+            id: Number,
         },
         data() {
             return {
                 item: null,
+                autoBidding: false,
                 bidsHistory: [],
-                bidPlaced: null
+                bidPlaced: null,
+                secondsPassed: null,
+                disableBidButton: false
             }
         },
         methods: {
             async getItem() {
-                console.log(this.id)
                 const data = await (this.sendRequest('get', '/api/items/' + this.id));
                 if (data) {
+
                     this.item = data.item;
                     this.bidsHistory = data.bids_history
+                    this.autoBidding = data.is_auto
+                    if (!this.bidClosed) {
+                        setTimeout(() => {
+                            this.getItem();
+                        }, 5000)
+                    }
                 }
-                console.log(this.bidsHistory)
-                // if (data) {
-                //     this.item = data.data;
-                // }
             },
-
             async placeBid() {
                 this.bidPlaced = null;
-                const data = await (this.sendRequest('post', `/api/items/${this.id}/bid`));
+                this.disableBidButton = true;
+                const data = await (this.sendRequest('post', `/api/items/${this.id}/bid`, {
+                    is_auto: this.autoBidding
+                }));
+                this.disableBidButton = false;
                 if (data) {
                     this.item.price = data.last_bid;
                     this.bidPlaced = data.bid_amount;
+                    this.bidsHistory = data.bids_history;
+                    this.autoBidding = data.is_auto;
                     setTimeout(function () {
                         $('#bid_message').fadeOut(2000)
                     }, 3000)
                 }
             }
         },
+
+        computed: {
+            bidClosed() {
+                return !this.item.expire_seconds;
+            },
+
+            balanceAvailable() {
+                return this.user.max_amount - this.user.total_bid >= this.item.price
+            }
+        },
+
         created() {
             this.getItem()
         }

@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $item_id
  * @property int $user_id
  * @property int $amount
+ * @property bool $is_auto
+ * @property bool $is_last
  * @property string $created_at
  * @property string $updated_at
  *

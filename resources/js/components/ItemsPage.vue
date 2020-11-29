@@ -16,7 +16,7 @@
         </div>
         <template v-if="items.length">
             <div class="row mt-4">
-                <div class="col-md-4" v-for="item in items" :key="'item_' + item.id">
+                <div class="col-md-3" v-for="item in items" :key="'item_' + item.id">
                     <div class="card mb-4 box-shadow">
                         <img class="card-img-top" :src="item.image">
                         <div class="card-body">

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Item;
 use Illuminate\Support\Facades\View;
 
 class ItemController extends Controller

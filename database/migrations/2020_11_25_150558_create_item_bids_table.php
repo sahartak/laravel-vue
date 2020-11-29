@@ -18,6 +18,8 @@ class CreateItemBidsTable extends Migration
             $table->foreignId('item_id');
             $table->integer('user_id');
             $table->integer('amount')->unsigned();
+            $table->boolean('is_auto')->default(0);
+            $table->boolean('is_last')->default(1);
             $table->timestamps();
 
             $table->foreign('item_id')

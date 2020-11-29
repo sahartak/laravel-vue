@@ -25,10 +25,13 @@ class ItemController extends Controller
         if (!$item) {
             return response(['error' => 'Item not found'], 404);
         }
+        $bidsHistory = $bidService->getBidsHistory($id);
+        $isAuto = $bidService->isAutoBidding($request->user, $id);
         return response([
             'data' => [
                 'item' => $item,
-                'bids_history' => $bidService->getBidsHistory($id)
+                'bids_history' => $bidsHistory,
+                'is_auto' => $isAuto
             ],
             'user' => $request->user
         ]);
@@ -42,15 +45,19 @@ class ItemController extends Controller
         if (!$item) {
             return response('Item not found', 404);
         }
-        $bid = $bidService->bid($user, $item->id, $itemService);
+        $is_auto = intval($request->get('is_auto'));
+        $bid = $bidService->bid($user, $item->id, $is_auto, $itemService);
         if (!$bid) {
-            return response(['error' => 'something went wrong!'], 500);
+            return response(['error' => 'Bid not placed!'], 403);
         }
+        $bidsHistory = $bidService->getBidsHistory($id);
+        $isAuto = $bidService->isAutoBidding($request->user, $id);
         return response([
             'data' => [
                 'bid_amount' => $bid->amount,
                 'last_bid' => $bid->item->price,
-                'bids_history' => $bidService->getBidsHistory($id)
+                'bids_history' => $bidsHistory,
+                'is_auto' => $isAuto
             ],
             'user' => $request->user
         ]);

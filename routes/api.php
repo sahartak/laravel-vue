@@ -16,12 +16,14 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group(['middleware' => ['cors', 'json.response']], function () {
-    Route::post('/login', 'Api\AuthController@login')->name('api.login');
+    Route::post('/login', 'Api\UserController@login')->name('api.login');
 
     Route::group(['middleware' => ['api.user']], function () {
-        Route::post('/items', 'Api\ItemController@index')->name('api.items');
-        Route::get('/items/{id}', 'Api\ItemController@item')->where('id', '[0-9]+');
-        Route::post('/items/{id}/bid', 'Api\ItemController@bid')->name('api.items')->where('id', '[0-9]+');
+        Route::get('account', 'Api\UserController@account');
+        Route::put('settings', 'Api\UserController@settings');
+        Route::post('items', 'Api\ItemController@index')->name('api.items');
+        Route::get('items/{id}', 'Api\ItemController@item')->where('id', '[0-9]+');
+        Route::post('items/{id}/bid', 'Api\ItemController@bid')->name('api.items')->where('id', '[0-9]+');
     });
 });
 

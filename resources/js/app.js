@@ -20,6 +20,8 @@ Vue.component(VueCountdown.name, VueCountdown);
 
 Vue.component('pagination', require('laravel-vue-pagination'));
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('top-menu', require('./components/TopMenu.vue').default);
+Vue.component('settings-page', require('./components/SettingsPage.vue').default);
 Vue.component('login-page', require('./components/LoginPage.vue').default);
 Vue.component('items-page', require('./components/ItemsPage.vue').default);
 Vue.component('item-page', require('./components/ItemPage.vue').default);
