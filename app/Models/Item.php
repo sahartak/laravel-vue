@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $name
  * @property string $description
- * @property float $price
+ * @property int $price
  * @property string $image
  * @property string $active_until
  * @property string $created_at
@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
 class Item extends Model
 {
     protected $guarded = [];
+    protected $appends = ['expire_seconds'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -27,6 +28,16 @@ class Item extends Model
     public function bids()
     {
         return $this->hasMany('App\Models\ItemBid');
-
     }
+
+    public function getExpireSecondsAttribute()
+    {
+        $now = time();
+        $active_until = strtotime($this->active_until);
+        $expire_seconds = $active_until > $now ? ($active_until - $now) : 0;
+        return $expire_seconds;
+    }
+
+
+
 }

@@ -15,10 +15,10 @@ class CreateItemBidsTable extends Migration
     {
         Schema::create('item_bids', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('item_id');
-            $table->unsignedBigInteger('user_id');
-            $table->float('bid_amount');
-            $table->timestamp('bid_on');
+            $table->foreignId('item_id');
+            $table->integer('user_id');
+            $table->integer('amount')->unsigned();
+            $table->timestamps();
 
             $table->foreign('item_id')
                 ->references('id')

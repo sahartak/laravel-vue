@@ -14,5 +14,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'LoginController@index');
-Route::get('/items', 'ItemController@index');
+Route::get('items', 'ItemController@index');
+Route::get('items/{id}', 'ItemController@show')->where('id', '[0-9]+');
 

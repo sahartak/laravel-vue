@@ -18,7 +18,8 @@ class CreateItemsTable extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('image', 500)->nullable();
-            $table->float('price')->default(0);
+            $table->integer('price')->default(0);
+            $table->integer('start_price')->default(0);
             $table->timestamp('active_until');
             $table->timestamps();
         });

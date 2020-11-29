@@ -9,8 +9,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $item_id
  * @property int $user_id
- * @property float $bid_amount
- * @property string $bid_on
+ * @property int $amount
+ * @property string $created_at
+ * @property string $updated_at
  *
  * @property Item $item
  */
@@ -18,8 +19,7 @@ class ItemBid extends Model
 {
     protected $guarded = [];
 
-    public $timestamps = false;
-
+    protected $appends = ['user_name'];
 
     /**
      * Returns Item relation
@@ -28,5 +28,16 @@ class ItemBid extends Model
     public function item()
     {
         return $this->belongsTo('App\Models\Item');
+    }
+
+    public function getUserNameAttribute(): ?string
+    {
+        $user = User::getUserById($this->user_id);
+        return $user->name ?? null;
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        return $this->updated_at->format('Y-m-d H:i:s');
     }
 }

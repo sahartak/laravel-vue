@@ -61,7 +61,18 @@ class User
         return null;
     }
 
-    public function validatePassword($password)
+    public static function getUserById(int $id): ?User
+    {
+        $userData = static::DEFAULT_USERS[$id] ?? null;
+        if ($userData) {
+            $user = new self();
+            $user->loadModel($userData);
+            return $user;
+        }
+        return null;
+    }
+
+    public function validatePassword(string $password)
     {
         return Hash::check($password, $this->password);
     }
@@ -100,5 +111,9 @@ class User
         $this->auto_bid = $data['auto_bid'];
     }
 
+    public function hasBalanceForBid(int $amount): bool
+    {
+        return true; //@todo add logic
+    }
 
 }

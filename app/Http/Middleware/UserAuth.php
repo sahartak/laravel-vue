@@ -21,6 +21,7 @@ class UserAuth
         if ($token) {
             $user = User::getByAccessToken($token);
             if ($user) {
+                $user->loginUser();
                 $request->user = $user;
                 return $next($request);
             }
